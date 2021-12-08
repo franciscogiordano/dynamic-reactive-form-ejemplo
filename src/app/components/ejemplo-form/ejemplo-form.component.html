@@ -1,0 +1,79 @@
+<div class="card">
+  <div class="card-body">
+    <ng-container *ngIf="methods">
+      <form (ngSubmit)="save()" [formGroup]="percentageForm">
+        <div class="form-group row mb-2">
+          <label class="col-md-2 col-form-label" for="observationsId"
+            >Observaciones Generales</label
+          >
+          <div class="col-md-8">
+            <input
+              class="form-control"
+              id="observationsId"
+              type="text"
+              placeholder="Observaciones (requerido)"
+              formControlName="observations"
+              [ngClass]="{
+                'is-invalid':
+                  (percentageForm.get('observations').touched ||
+                    percentageForm.get('observations').dirty) &&
+                  !percentageForm.get('observations').valid
+              }"
+            />
+            <span class="invalid-feedback">
+              <span *ngIf="percentageForm.get('observations').errors?.required">
+                Este campo es requerido
+              </span>
+              <span
+                *ngIf="percentageForm.get('observations').errors?.minlength"
+              >
+                Este campo debe ser más largo que 2 letras
+              </span>
+            </span>
+          </div>
+        </div>
+        <hr />
+        <div
+          class="m-4"
+          formArrayName="methods"
+          *ngFor="let payment of payments; let i = index"
+        >
+          <h4>
+            {{ payment.id }}
+            {{ payment.method }}
+          </h4>
+          <div [formGroupName]="i" class="form-group row mb-2">
+            <label class="col-md-2 col-form-label" for="lastNameId"
+              >Porcentaje</label
+            >
+            <input
+              class="form-control"
+              id="{{ 'percentage' + i }}"
+              type="number"
+              formControlName="percentage"
+            />
+          </div>
+        </div>
+        <div class="form-group row mb-2">
+          <div class="offset-md-2 col-md-4">
+            <button
+              class="btn btn-primary mr-3"
+              type="submit"
+              style="width: 80px"
+              [title]="
+                percentageForm.valid
+                  ? 'Save'
+                  : 'Disabled until the form data is valid'
+              "
+              [disabled]="!percentageForm.valid"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+</div>
+<br />Valid: {{ percentageForm.valid }} <br />Value:
+{{ percentageForm.value | json }} <br />
